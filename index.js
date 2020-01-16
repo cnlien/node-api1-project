@@ -50,16 +50,19 @@ server.get('/users/:id', (req, res) => {
 //==========================================//
 
 server.post ('/users', (req, res) => {
-    const userInfo = req.body;
-    // console.log('body: ', userInfo);
+    const {name, bio} = req.body;
 
-    db.insert(userInfo)
-        .then((user) => {
-            res.status(201).json({success: true, user});
-        })
-        .catch((err) => {
-            res.status(500).json({success: false, err});
-        });
+    if (!name || !bio) {
+        res.status(400).json({errorMessage: "Please provide name and bio for the user."});
+    } else {
+        db.insert(req.body)
+            .then(user => {
+                res.status(201).json(user)
+            })
+            .catch(error=> {
+                res.status(500).json({error:"There was an error"});
+            });
+    }
 });
 
 //=============================================//
