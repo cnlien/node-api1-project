@@ -61,3 +61,23 @@ server.post ('/users', (req, res) => {
             res.status(500).json({success: false, err});
         });
 });
+
+//=============================================//
+// UPDATE A NEW USER OBJECT TO THE USERS ARRAY //
+//=============================================//
+server.put('/users/:id', (req, res) => {
+    const id = req.params.id;
+    const userInfo = req.body;
+
+    db.update(id, userInfo)
+        .then (user => {
+            if (user) {
+                res.status(200).json({ success: true, user});
+            } else {
+                res.status(404).json({ success: false, message: 'id not found'});
+            }
+        })
+        .catch (err=> {
+            res.status(500).json({success: false, err});
+        });
+});
