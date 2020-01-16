@@ -70,9 +70,12 @@ server.post ('/users', (req, res) => {
 //=============================================//
 server.put('/users/:id', (req, res) => {
     const id = req.params.id;
-    const userInfo = req.body;
+    const {name, bio} = req.body;
 
-    db.update(id, userInfo)
+    if (!name || !bio) {
+        res.status(400).json({errorMessage: "There was an error while saving the user to the database"})
+    } else {
+        db.update(id, req.body)
         .then (user => {
             if (user) {
                 res.status(200).json({ success: true, user});
@@ -83,6 +86,8 @@ server.put('/users/:id', (req, res) => {
         .catch (err=> {
             res.status(500).json({success: false, err});
         });
+    }
+
 });
 
 //=============================================//
