@@ -14,6 +14,9 @@ server.get('/', (req, res) => {
     res.send('Node API Project 1');
 })
 
+//===========================//
+//    GET A LIST OF USERS    //
+//===========================//
 server.get('/users', (req, res) => {
     db.find()
         .then(users => {
@@ -24,6 +27,9 @@ server.get('/users', (req, res) => {
         })
 })
 
+//===========================//
+// GET A LIST OF USERS BY ID //
+//===========================//
 server.get('/users/:id', (req, res) => {
     db.findById(req.params.id)
         .then(user => {
@@ -39,3 +45,19 @@ server.get('/users/:id', (req, res) => {
         });
 });
 
+//==========================================//
+// ADD A NEW USER OBJECT TO THE USERS ARRAY //
+//==========================================//
+
+server.post ('/users', (req, res) => {
+    const userInfo = req.body;
+    // console.log('body: ', userInfo);
+
+    db.insert(userInfo)
+        .then((user) => {
+            res.status(201).json({success: true, user});
+        })
+        .catch((err) => {
+            res.status(500).json({success: false, err});
+        });
+});
