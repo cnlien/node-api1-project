@@ -81,3 +81,21 @@ server.put('/users/:id', (req, res) => {
             res.status(500).json({success: false, err});
         });
 });
+
+//=============================================//
+// DELETE A NEW USER OBJECT TO THE USERS ARRAY //
+//=============================================//
+server.delete('/users/:id', (req, res) => {
+    const { id } = req.params;
+    db.remove(id)
+        .then (deleteUser => {
+            if(deleteUser) {
+                res.status(204).end();
+            } else {
+                res.status(404).json({ message: 'id not found'});
+            }
+        })
+        .catch (err => {
+            res.status(500).json({ success: false, err });
+        });
+});
