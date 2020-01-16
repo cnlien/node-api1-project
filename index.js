@@ -23,7 +23,7 @@ server.get('/users', (req, res) => {
             res.status(200).json(users);
         })
         .catch(err => {
-            res.status(500).json({success: false, err});
+            res.status(500).json({errorMessage: "The users information could not be retrieved."});
         })
 })
 
@@ -34,14 +34,14 @@ server.get('/users/:id', (req, res) => {
     db.findById(req.params.id)
         .then(user => {
             if (user) {
-                res.status(200).json({ success: true, user})
+                res.status(200).json({user})
             } else {
-                res.status(404).json({ success: false, messsage: 'id no found'});
+                res.status(404).json({ message: "The user with the specified ID does not exist." });
             }
         })
 
         .catch (err => {
-            res.status(500).json({ success: false, err })
+            res.status(500).json({ errorMessage: "The user information could not be retrieved." })
         });
 });
 
@@ -78,13 +78,13 @@ server.put('/users/:id', (req, res) => {
         db.update(id, req.body)
         .then (user => {
             if (user) {
-                res.status(200).json({ success: true, user});
+                res.status(200).json({user});
             } else {
-                res.status(404).json({ success: false, message: 'id not found'});
+                res.status(404).json({ message: "The user with the specified ID does not exist." });
             }
         })
         .catch (err=> {
-            res.status(500).json({success: false, err});
+            res.status(500).json({ errorMessage: "The user information could not be modified." });
         });
     }
 
@@ -100,10 +100,10 @@ server.delete('/users/:id', (req, res) => {
             if(deleteUser) {
                 res.status(204).end();
             } else {
-                res.status(404).json({ message: 'id not found'});
+                res.status(404).json({ message: "The user with the specified ID does not exist." });
             }
         })
         .catch (err => {
-            res.status(500).json({ success: false, err });
+            res.status(500).json({ errorMessage: "The user could not be removed" });
         });
 });
