@@ -23,3 +23,19 @@ server.get('/users', (req, res) => {
             res.status(500).json({success: false, err});
         })
 })
+
+server.get('/users/:id', (req, res) => {
+    db.findById(req.params.id)
+        .then(user => {
+            if (user) {
+                res.status(200).json({ success: true, user})
+            } else {
+                res.status(404).json({ success: false, messsage: 'id no found'});
+            }
+        })
+
+        .catch (err => {
+            res.status(500).json({ success: false, err })
+        });
+});
+
