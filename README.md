@@ -31,6 +31,12 @@ Add the code necessary to create a Web API and implement the following _endpoint
 | DELETE | /api/users/:id | Removes the user with the specified `id` and returns the deleted user.                                 |
 | PATCH  | /api/users/:id | Updates the user with the specified `id` using data from the `request body`. Returns the modified user |
 
+- [-] POST `/api/users`
+- [-] GET `api/users`
+- [-] GET `api/users/:id`
+- [-] DELETE `api/users/:id`
+- [-] PATCH `api/users/:id`
+
 #### User Schema
 
 Each User _resource_ should conform to the following structure (AKA schema):
