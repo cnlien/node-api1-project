@@ -3,15 +3,16 @@ const shortid = require('shortid');
 const { body, validationResult } = require('express-validator');
 
 const server = express();
-server.use(express.json())
 
 let users = [
     {
-        id: 1,
-        name: "Jane Doe", // String, required
-        bio: "Not Tarzan's Wife, another Jane",
-    }
-]
+      name: "Jane Doe",
+      bio: "Not Tarzan's Wife, another Jane",
+      id: shortid.generate(),
+    },  
+];
+
+server.use(express.json())
 
 server.get('/', (req, res) => {
     res.send('API is running')
@@ -23,6 +24,7 @@ server.post('/api/users', [
 ], (req, res) => {
     const userInfo = req.body;
     const errors = validationResult(req);
+
     if(!errors.isEmpty()){
         return (
             res.status(400)
@@ -44,11 +46,62 @@ server.post('/api/users', [
     }
 })
 
-server.get('/api/users', (req, res) => {
+server.get('/api/users/', (req, res) => {
     res.status(200).json(users)
     res.status(500).json({
         errorMessage: "The users information could not be retrieved."
     })
+})
+
+server.get('/api/users/:id', (req, res) => {
+    const { id } = req.params
+    let found = (users.find(user => user.id === id))
+    
+    if (found) {
+        res.status(200).json(found);
+    } else {
+        res.status(404).json({
+            message: "User ID not found"
+        })
+    }
+    
+})
+
+server.delete('/api/users/:id', (req, res) => {
+    const { id } = req.params
+    let deleteUser = (users.find(user => user.id === id))
+
+    if (deleteUser) {
+
+        users = users.filter(user => user.id !== id);
+        res.status(200).json(deleteUser)
+    } else {
+        res.status(404).json({
+            success: false,
+            message: "The user with the specified ID does not exist."
+        })
+    }
+});
+
+server.put('/api/users/:id', [
+    body('name').isString().notEmpty(),
+    body('bio').isString().notEmpty()
+], (req, res) => {
+    const { id } = req.params;
+    const changes = req.body;
+    const errors = validationResult(req);
+    
+    let index = (users.findIndex(user => user.id === id));
+
+    if (index !== -1) {
+        users[index] = changes;
+        res.status(200).json(users[index])
+    } else {
+        res.status(404).json({
+            succes: false,
+            message: "The user with the specified ID does not exist."
+        })
+    }
 })
 
 
